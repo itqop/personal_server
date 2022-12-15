@@ -1,0 +1,69 @@
+version: "3.9"
+services:
+  app:
+    container_name: app
+    build:
+      dockerfile: ./app/Dockerfile
+      context: .
+    ports:
+      - 50000:5050
+      - 50001:50001
+      - 443:8081
+
+    volumes:
+      - .:/opt/app/api
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=admin
+      - DB_DB=db  
+      - DB_AWAIT_SECONDS=3
+      - DAYS_TO_SAVE_SENSORSDATA=${DAYS_TO_SAVE_SENSORSDATA}
+      - LOGIN_DELAY_MAX_MILLIS=${LOGIN_DELAY_MAX_MILLIS}
+
+    depends_on:
+      - db
+    networks:
+      - backend
+  db:
+    container_name: db
+    image: mysql:8.0
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=db
+    ports:
+      - 3306:3306
+    networks:
+      - backend
+
+  web:
+    container_name: web
+    # Build an image from the files in the project root directory (Dockerfile)
+    build: 
+      context: ../Frontend
+      args:
+        - REACT_APP_SERVICES_HOST=/services/m    
+    depends_on:
+        - app
+    # Mount the container `/drf` folder to the a `src` folder in the location
+    # of the Dockerfile on the host machine.
+    volumes:
+        - ../Frontend:/usr/src/app/
+    restart: always
+    # Map port 3000 to port 8081 so that we can access the application on
+    # our host machine by visiting 127.0.0.1:8081
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+      - backend
+
+volumes:
+  database:
+
+networks:
+  frontend:
+  backend:
+    driver: bridge

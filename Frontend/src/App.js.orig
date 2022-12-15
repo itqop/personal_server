@@ -1,0 +1,160 @@
+import React, { Fragment, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { Container, Row, Col, Card } from 'react-bootstrap';
+
+import 'bootstrap/dist/css/bootstrap.css';
+
+import { setLoggedState } from './AppSlice';
+
+import axios from 'axios';
+
+async function App() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();  
+  const {
+    isLoggedIn,
+  } = useSelector((state) => {
+    console.log(`App::render: state=${JSON.stringify(state.app)}`);
+    return state.app;
+  });
+
+const authInfoString = window.localStorage.getItem('authInfo');
+const authInfo = JSON.parse(authInfoString)
+console.log(`App::render: authInfo=${JSON.stringify(authInfo)}`);
+
+useEffect(() => {
+    if (authInfo === null || !isLoggedIn) {
+      console.log('Navigate to login')
+      navigate('/login');
+      dispatch(setLoggedState({ isLoggedIn: false }));
+    }
+  }, [authInfo, isLoggedIn, navigate])
+
+// if (!isLoggedIn) {
+//     if (authInfo === null) {
+//       dispatch(setLoggedState({ isLoggedIn: false }));
+//       console.log('Navigate to login')
+//       return null;
+//     }/* else if (!isLoggedIn) {
+//       dispatch(setLoggedState({ isLoggedIn: true }));
+//     }*/
+//   }
+  
+  // let res
+  // console.log(`Before request. Token: ${authInfo.TokenInfo.Token}`)
+  // try {
+  //   res = await axios({
+  //     url: 'http://127.0.0.1:50001/api/complexes',
+  //     method: 'get',
+  //     headers: { Authorization: `Bearer ${authInfo.TokenInfo.Token}` }
+  //   })
+  // } catch(err) {
+  //   console.log(`Error while requsting complexes info: ${JSON.stringify(err)}`)
+  //   res = err.response
+  // }
+
+  // console.log(`Request result: ${JSON.stringify(res)}`);
+  //   if (res.status !== 201 && res.status !== 200) {
+  //     console.log(`Error while requsting complexes info, status = ${res.status}`);
+  //     //@todo Show error
+  //     return;
+  //   }
+
+  // const renderComplex = (complex) => {
+  // return (
+  //   <Col>
+  //     <Card className='m-1' bg={complex.state}>
+  //       <Card.Header>{complex.name}</Card.Header>
+  //       <Card.Body>
+  //         <Card.Text>
+  //           <div>Присоединен: {complex.connected}</div>
+  //           <div>Данные получены: {complex.lastInfo}</div>
+  //         </Card.Text>
+  //       </Card.Body>
+  //     </Card>
+  //   </Col>)
+  // }
+
+  // const renderComplexes = (complexes) => {
+  //   // if (complexes.length() == 0)
+  //   //   return null
+  //   return(
+  //     <Row className='row-cols-1 row-cols-xs-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl=4'> {
+  //       complexes.map((complex) => {
+  //         return renderComplex(complex)
+  //       })}
+  //     </Row>)
+  // }
+
+  // var complexes = [
+  //   { name: 'Test1',
+  //     state: 'normal',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 09:28:00' },
+  //   { name: 'Test2',
+  //     state: 'warning',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 04:28:01' },
+  //   { name: 'Test3',
+  //     state: 'danger',
+  //     connected: 'Нет',
+  //     lastInfo: '2022-10-03 09:28:02' },
+  //     { name: 'Test1',
+  //     state: 'normal',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 09:28:00' },
+  //   { name: 'Test2',
+  //     state: 'warning',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 04:28:01' },
+  //   { name: 'Test3',
+  //     state: 'danger',
+  //     connected: 'Нет',
+  //     lastInfo: '2022-10-03 09:28:02' },
+  //     { name: 'Test1',
+  //     state: 'normal',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 09:28:00' },
+  //   { name: 'Test2',
+  //     state: 'warning',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 04:28:01' },
+  //   { name: 'Test3',
+  //     state: 'danger',
+  //     connected: 'Нет',
+  //     lastInfo: '2022-10-03 09:28:02' },
+  //     { name: 'Test1',
+  //     state: 'normal',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 09:28:00' },
+  //     { name: 'Test2',
+  //     state: 'warning',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 04:28:01' },
+  //   { name: 'Test3',
+  //     state: 'danger',
+  //     connected: 'Нет',
+  //     lastInfo: '2022-10-03 09:28:02' },
+  //   { name: 'Test2',
+  //     state: 'warning',
+  //     connected: 'Да',
+  //     lastInfo: '2022-10-03 04:28:01' },
+  //   { name: 'Test3',
+  //     state: 'danger',
+  //     connected: 'Нет',
+  //     lastInfo: '2022-10-03 09:28:02' },
+  // ];
+
+  return (
+    <Fragment>
+      <Container fluid> 
+        <div>Test</div>
+        {/* {renderComplexes(complexes)} */}
+      </Container>
+    </Fragment>
+  );
+}
+
+export default App;
